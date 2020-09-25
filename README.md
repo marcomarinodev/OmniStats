@@ -18,4 +18,11 @@ This code is written for Statistics and Probability Course, and for now it shows
 ## ToDo:
 - Regression Line Representation
 - Covariance
+- Load data from file (possibly add File class to handle that)
+- Median and quartiles
+## Improvements:
+- Show both the plots at once, without having to close the first one to show the second one
+- Rename Statistica.py into something more meaningful (e.g. DatasetStatistics)
+- Maybe think about creating a more generic class to handle things like the covariance, that involves more than one dataset. This is just an organization choice though
+
 
