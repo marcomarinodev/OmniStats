@@ -2,7 +2,7 @@ import numpy as np
 import dc_stat_think as dcst
 import matplotlib.pyplot as plt
 
-class Statistica:
+class DataStatistics:
     def __init__(self, dataset):
         self._dataset = dataset
         self._dataset_length = len(dataset)
@@ -23,7 +23,7 @@ class Statistica:
         if self._dataset_length == len(y_data):
             for i in range(0, self._dataset_length):
                 sum += (self._dataset[i] - x_mean) * (y_data[i] - y_mean)
-            sum /= self._dataset_length
+            sum /= (self._dataset_length - 1)
         return sum
 
     def variance(self):
@@ -33,7 +33,7 @@ class Statistica:
         for x in self._dataset:
             sum += (x - mean) ** 2
 
-        return sum / len(self._dataset) - 1
+        return sum / (len(self._dataset) - 1)
 
     def standard_deviation(self):
         return np.sqrt(self.variance())
@@ -46,6 +46,3 @@ class Statistica:
         plt.title(name + " | Mean: {:.2f}; Standard Deviation: {:.5f}; Variance: {:.5f}".format(
             self.mean(), self.standard_deviation(), self.variance()))
         plt.show()
-
-    def get_dataset(self):
-        return self._dataset
