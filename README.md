@@ -16,8 +16,6 @@ This code is written for Statistics and Probability Course, and for now it shows
 ### Empirical Cumulative Distribution Function
 ![equation](https://latex.codecogs.com/gif.latex?F_%7Be%7D%28t%29%3D%5Cfrac%7B%5C%23%5C%7Bx_%7Bi%7D%7Cx_%7Bi%7D%5Cleq%20t%5C%7D%7D%7Bn%7D)
 ## ToDo:
-- Regression Line Representation
-- Covariance
 - Load data from file (possibly add File class to handle that)
 - Median and quartiles
 ## Improvements:
