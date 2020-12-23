@@ -1,11 +1,9 @@
-# Empirical-Cumulative-Distribution-Function
+# OmniStats
 ## Overview
 This code is written for Statistics and Probability Course, and for now it shows:
 1) Mean
 2) Standard Deviation and Variance
 3) Empirical Cumulative Distribution Function (ECDF)
-
-<img src="RegressionLine.png" style="width:500px; height:694px;"/>
 
 ### Mean
 ![equation](https://latex.codecogs.com/gif.latex?x_%7BM%7D%3D%5Cfrac%7B%5Csum_%7Bi%3D1%7D%5E%7Bn%7D%20x_%7Bi%7D%7D%7Bn%7D)
@@ -22,6 +20,5 @@ This code is written for Statistics and Probability Course, and for now it shows
 - Median and quartiles
 ## Improvements:
 - Show both the plots at once, without having to close the first one to show the second one
-- Maybe think about creating a more generic class to handle things like the covariance, that involves more than one dataset. This is just an organization choice though
 
 
