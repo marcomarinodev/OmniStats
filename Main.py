@@ -1,48 +1,142 @@
-import random
-import matplotlib.pyplot as plt
-from DataStatistics import File as fsys
-from DataStatistics import DataStatistics as s
-from Utility import Utility as util
-import numpy as np
-import pandas as pd  # To read data
-from sklearn.linear_model import LinearRegression
+import tkinter as tk
+import tkinter.ttk as ttk
+import File
+from tkinter.filedialog import askopenfilename, asksaveasfilename
+from Statistics import Statistics
 
-if __name__ == "__main__":
+# Main with GUI
+class App:
+    def __init__(self, master):
+        self.error_log = tk.StringVar()
 
-    (x_dataset, y_dataset) = fsys.File('data.csv').get_csv_data()
+        # Main frame
+        frame = tk.Frame(master)
+        frame.pack()
 
-    x_stat = s.DataStatistics(x_dataset)
-    y_stat = s.DataStatistics(y_dataset)
+        # Text fields space
+        fields_frame = tk.Frame(frame)
+        fields_frame.grid(row=0, column=1)
 
-    # Regression line using sklearn
-    data = pd.read_csv('data.csv')  # load data set
-    X = data.iloc[:, 1].values.reshape(-1, 1)  # values converts it into a numpy array
-    Y = data.iloc[:, 2].values.reshape(-1, 1)  # -1 means that calculate the dimension of rows, but have 1 column
-    linear_regressor = LinearRegression()  # create object for the class
-    linear_regressor.fit(X, Y)  # perform linear regression
-    Y_pred = linear_regressor.predict(X)  # make predictions
+        # path name
+        self._path = tk.StringVar()
+        self._path.set("Status: No file opened")
+        path_space = tk.Label(fields_frame, textvariable=self._path)
+        path_space.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
 
-    plt.scatter(X, Y)
-    plt.plot(X, Y_pred, color='red')
-    plt.show()
+        self.txt_space = tk.Text(fields_frame, bg="#dcdfe3")
+        self.txt_space.grid(row=1, column=0, sticky="nsew", padx=5)
 
-    # plot x data
-    x_stat.plot_data("X array")
-    y_stat.plot_data("Y array")
+        # Buttons Left Panel space
+        buttons_frame = tk.Frame(frame, bg="lightgray")
+        buttons_frame.grid(row=0, column=0, sticky="ns")
 
-    # Empirical Cumulative Distribution Function
-    x, y = x_stat.ecdf()
-    # Plot the ECDF as dots
-    plt.plot(x, y * 100, linestyle='dotted', lw=2)
-    plt.show()
+        # actions label
+        self.actions_label = tk.Label(buttons_frame, textvariable=self.error_log, bg="lightgray")
+        self.actions_label.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
 
-    ### ISSUE TO SOLVE
-    # Covariance and regression line
-    # x_cov = x_stat.covariance(y_stat)
-    # b = x_cov / y_stat.variance()
-    # a = y_stat.mean() - b * x_stat.mean()
+        # button for opening a file
+        btn_open = tk.Button(buttons_frame, text="Open", command=self.open_file)
+        btn_open.grid(row=1, column=0, sticky="ew", padx=5, pady=5)
 
-    # plt.scatter(x_dataset, y_dataset)
-    # plt.title("Regression line and x, y correlation")
-    # util.create_line([0, a], [1, b + a])
-    # plt.show()
+        # button for computing
+        btn_compute = tk.Button(buttons_frame, text="Compute", command=self.compute_data)
+        btn_compute.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
+
+        # button for saving
+        btn_save = tk.Button(buttons_frame, text="Save", command=self.save_file)
+        btn_save.grid(row=3, column=0, sticky="ew", padx=5)
+
+    def format_dataset(self, dataset):
+        # dataset is taken as string from txt_space
+        # splitting data between \n
+        splitted_ = dataset.split('\n')
+        # filter blank spaces
+        filtered_ = list(filter(('').__ne__, splitted_))
+        string_dataset = []
+
+        # filtering alphanumeric 
+        for i in filtered_ :
+            current = ""
+            for j in i:
+                if not j.isalnum():
+                    continue
+                elif j.isalpha():
+                    continue
+                else:
+                    current += j
+            string_dataset.append(current)  
+
+        # cast to integer
+        final_dataset = [int(numeric_str) for numeric_str in string_dataset]
+        return final_dataset
+
+    def compute_data(self):
+        # end-1c because it deletes 1 character (newline character)
+        dataset = self.txt_space.get("1.0", 'end-1c')
+        # using Statistics class to generate ECDF, MEAN, VARIANCE and STD
+        stats = Statistics(self.format_dataset(dataset))
+        stats.plot_data("INFO")
+        stats.cdf()
+        
+
+    def save_file(self):
+        # getting path
+        filepath = self._path.get()
+        if len(filepath) == 0:
+            # saving file procedure
+            filepath = asksaveasfilename(
+                defaultextension="txt",
+                filetypes=[("Text files", "*.txt")]
+            )
+
+        if not filepath:
+            return
+
+        # get data from file and put it into txt_space
+        writer = File.File(filepath)
+        text = self.txt_space.get("1.0", tk.END)
+        writer.save_data(text)
+        return
+
+    def get_data_from_(self, dtype, path_name):
+        # you can select type of source to get data
+        # for now only txt is supported
+        reader = File.File(path_name)
+        if dtype == 'txt':
+            data = reader.get_data()
+            for d in data:
+                self.txt_space.insert(tk.END, str(d))
+
+    def open_file(self):
+        # Importing file
+        filepath = askopenfilename(
+            filetypes=[("TXT files", "*.txt")]
+        )
+        if not filepath:
+            return
+        # erase previous content
+        self.txt_space.delete('1.0', tk.END)
+        # update opened file path
+        self._path.set(filepath)
+        # data type cases (FOR NOW IT SUPPORTS TXT FILES ONLY)
+        if filepath.endswith('.txt'):
+            # getting data from txt file and write it on text space
+            self.get_data_from_('txt', filepath)
+
+
+def main():
+    # Main root
+    root = tk.Tk(className='OmniStatsPy')
+    root.geometry("700x400")
+    # fixed size window
+    root.resizable(0, 0)
+    # first row config
+    root.rowconfigure(0, minsize=600, weight=1)
+    # second row config
+    root.columnconfigure(1, minsize=600, weight=1)
+    app = App(root)
+    root.mainloop()
+
+
+if __name__ == '__main__':
+    main()
