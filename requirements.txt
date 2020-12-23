@@ -1,6 +1,2 @@
 numpy
-numba
 matplotlib
-dc_stat_think
-pandas
-sklearn
