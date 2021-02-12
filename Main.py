@@ -58,16 +58,16 @@ class App:
         for i in filtered_ :
             current = ""
             for j in i:
-                if not j.isalnum():
+                if not j.isalnum() and j != "." and j != ",":
                     continue
-                elif j.isalpha():
+                elif j.isalpha() and j != "." and j != ",":
                     continue
                 else:
                     current += j
             string_dataset.append(current)  
 
         # cast to integer
-        final_dataset = [int(numeric_str) for numeric_str in string_dataset]
+        final_dataset = [float(numeric_str) for numeric_str in string_dataset]
         return final_dataset
 
     def compute_data(self):
