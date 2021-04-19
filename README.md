@@ -5,6 +5,12 @@ This code is written for Statistics and Probability Course, and for now it shows
 2) Standard Deviation and Variance
 3) Empirical Cumulative Distribution Function (ECDF)
 
+![Image 1](/r1.png)
+![Image 2](/r2.png)
+![Image 3](/r3.png)
+
+
+
 ### Mean
 ![equation](https://latex.codecogs.com/gif.latex?x_%7BM%7D%3D%5Cfrac%7B%5Csum_%7Bi%3D1%7D%5E%7Bn%7D%20x_%7Bi%7D%7D%7Bn%7D)
 ### Variance
